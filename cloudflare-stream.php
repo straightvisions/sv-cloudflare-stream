@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin Name: Cloudflare Stream
- * Plugin URI: https://wordpress.org/plugins/cloudflare-stream/
+ * Plugin Name: SV Cloudflare Stream
+ * Plugin URI: https://github.com/straightvisions/sv-cloudflare-stream
  * Description: Cloudflare Stream Video is an easy-to-use, affordable, on-demand video streaming platform. Stream seamlessly integrates video storage, encoding, and a customizable player with Cloudflare’s fast, secure, and reliable global network, so that you can spend less time managing video delivery and more time building and promoting your product.
- * Author: Cloudflare
+ * Author: Cloudflare, straightvisions GmbH
  * Author URI: https://www.cloudflare.com/products/cloudflare-stream/
- * Version: 1.0.5
+ * Version: 1.0.6f
  * License: GPL2+
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  *
