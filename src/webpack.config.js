@@ -26,16 +26,7 @@
  */
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
-
-function recursiveIssuer(m) {
-	if (m.issuer) {
-		return recursiveIssuer(m.issuer);
-	} else if (m.name) {
-		return m.name;
-	} else {
-		return false;
-	}
-}
+const RemovePlugin = require('remove-files-webpack-plugin');
 
 module.exports = {
 	// Entry.
@@ -43,25 +34,29 @@ module.exports = {
 		block: "./blocks.js",
 		editor: "./block/editor.scss",
 		style: "./block/style.scss",
-	}, // Import all JavaScript dependencies in this file.
+	},
 	
-	// Output.
 	output: {
-		path: __dirname, // Path to produce the output. Set to the current directory.
-		filename: "../dist/[name].build.js" // Filename of the file that webpack builds.
+		path: __dirname,
+		filename: "../dist/[name].build.js"
 	},
 
-	// Loaders.
-	// The configuration below has defined a rules property for a single module with
-	// two required properties: test and use. This tells webpack's compiler the following:
-	// "Hey webpack compiler, when you come across a '.js' or '.jsx' file inside of a
-	// require()/import statement, use the babel-loader to transform it before you add
-	// it to the bundle."
 	plugins: [
 		new MiniCssExtractPlugin({
 			filename: "../dist/[name].build.css"
+		}),
+		new RemovePlugin({
+			after: {
+				root: '../dist',
+				include: [
+					'block.build.css',
+					'editor.build.js',
+					'style.build.js',
+				],
+			}
 		})
 	],
+	
 	module: {
 		rules: [
 			{
@@ -81,28 +76,12 @@ module.exports = {
 			},
 		]
 	},
+	
 	optimization: {
 		minimizer: [
-			`...`,
+			`...`, // merge with after minimizers // important for js
 			new CssMinimizerPlugin(),
 		],
-		splitChunks: {
-			cacheGroups: {
-				editorStyles: {
-					name: 'editor',
-					test: (m, c, entry = 'editor') =>
-						m.constructor.name === 'CssModule' && recursiveIssuer(m) === entry,
-					chunks: 'all',
-					enforce: true,
-				},
-				frontendStyles: {
-					name: 'frontend',
-					test: (m, c, entry = 'frontend') =>
-						m.constructor.name === 'CssModule' && recursiveIssuer(m) === entry,
-					chunks: 'all',
-					enforce: true,
-				},
-			},
-		},
+		
 	}
 };
