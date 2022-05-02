@@ -10,7 +10,7 @@ import * as tus from "tus-js-client";
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const {
 	Disabled,
-	IconButton,
+	Button,
 	PanelBody,
 	Toolbar,
 	ToggleControl,
@@ -22,7 +22,7 @@ const {
 	BlockControls,
 	InspectorControls,
 	MediaUpload,
-} = wp.editor;
+} = wp.blockEditor;
 const { Fragment, Component, createRef } = wp.element;
 
 class CloudflareStreamEdit extends Component {
@@ -345,7 +345,8 @@ class CloudflareStreamEdit extends Component {
 						<div id={ 'progressbar-' + this.instanceId } style={ progressBarStyle }>
 							<div className={ 'progress-label progress-label-' + this.instanceId }>Connecting...</div>
 						</div>
-						<IconButton
+						<Button
+							variant="tertiary"
 							isDefault
 							isLarge
 							icon="update"
@@ -355,7 +356,7 @@ class CloudflareStreamEdit extends Component {
 							className="editor-media-placeholder__retry-button"
 						>
 							{ __( 'Retry' ) }
-						</IconButton>
+						</Button>
 					</Placeholder>
 				);
 			} else if ( encoding ) {
@@ -372,7 +373,8 @@ class CloudflareStreamEdit extends Component {
 						<div id={ 'progressbar-' + this.instanceId } style={ progressBarStyle }>
 							<div className={ 'progress-label progress-label-' + this.instanceId }>Connecting...</div>
 						</div>
-						<IconButton
+						<Button
+							variant="tertiary"
 							isDefault
 							isLarge
 							icon="update"
@@ -382,7 +384,7 @@ class CloudflareStreamEdit extends Component {
 							className="editor-media-placeholder__retry-button"
 						>
 							{ __( 'Retry' ) }
-						</IconButton>
+						</Button>
 					</Placeholder>
 				);
 			}
@@ -399,27 +401,28 @@ class CloudflareStreamEdit extends Component {
 							className={ className }
 							value={ this.props.attributes }
 							render={ () => (
-								<IconButton
+								<Button
 									isLarge
+									variant="secondary"
 									label={ __( 'Stream Library' ) }
 									onClick={ this.open }
 									className="editor-media-placeholder__browse-button"
 								>
 									{ __( 'Stream Library' ) }
-								</IconButton>
+								</Button>
 							) }
 						/>
-						<IconButton
+						<Button
 							isDefault
 							isLarge
-							icon="cancel"
+							variant="tertiary"
 							label={ __( 'Cancel' ) }
 							onClick={ switchFromEditing }
 							style={ { display: 'none' } }
 							className="editor-media-placeholder__cancel-button"
 						>
 							{ __( 'Cancel' ) }
-						</IconButton>
+						</Button>
 					</Placeholder>
 				);
 			}
@@ -432,6 +435,7 @@ class CloudflareStreamEdit extends Component {
 				>
 					<FormFileUpload
 						isLarge
+						variant="primary"
 						multiple
 						className="editor-media-placeholder__upload-button"
 						onChange={ switchToUploading }
@@ -444,27 +448,28 @@ class CloudflareStreamEdit extends Component {
 						className={ className }
 						value={ this.props.attributes }
 						render={ () => (
-							<IconButton
+							<Button
+								variant="secondary"
 								isLarge
 								label={ __( 'Stream Library' ) }
 								onClick={ this.open }
 								className="editor-media-placeholder__browse-button"
 							>
 								{ __( 'Stream Library' ) }
-							</IconButton>
+							</Button>
 						) }
 					/>
-					<IconButton
+					<Button
+						variant="tertiary"
 						isDefault
 						isLarge
-						icon="cancel"
 						label={ __( 'Cancel' ) }
 						onClick={ switchFromEditing }
 						style={ { display: 'none' } }
 						className="editor-media-placeholder__cancel-button"
 					>
 						{ __( 'Cancel' ) }
-					</IconButton>
+					</Button>
 				</Placeholder>
 			);
 		}
@@ -473,8 +478,8 @@ class CloudflareStreamEdit extends Component {
 		return (
 			<Fragment>
 				<BlockControls>
-					<Toolbar>
-						<IconButton
+					<Toolbar label="Options">
+						<Button
 							className="components-icon-button components-toolbar__control"
 							label={ __( 'Edit video' ) }
 							onClick={ switchToEditing }
