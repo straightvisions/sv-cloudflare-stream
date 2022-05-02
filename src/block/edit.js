@@ -508,14 +508,16 @@ class CloudflareStreamEdit extends Component {
 				</InspectorControls>
 				<figure className={ className }>
 					<Disabled>
-						{ <stream
-							src={ uid }
-							controls={ controls }
-							autoPlay={ autoplay }
-							loop={ loop }
-							muted={ muted }
-							ref={ this.streamPlayer }
-						></stream> }
+						{
+							<iframe
+								src={ 'https://iframe.videodelivery.net/' + uid }
+								controls={ controls }
+								autoPlay={ autoplay }
+								loop={ loop }
+								muted={ muted }
+								ref={ this.streamPlayer }
+							/>
+							}
 						{ /*<img src={ thumbnail } alt="Cloudflare Stream Video" /> */ }
 					</Disabled>
 				</figure>

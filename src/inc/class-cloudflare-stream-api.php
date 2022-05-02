@@ -120,7 +120,9 @@ class Cloudflare_Stream_API {
 			'X-Auth-Key'   => $this->api_key,
 			'Content-Type' => 'application/json',
 		);
-
+		echo "<pre>";
+var_dump($route);
+var_dump($args);
 		// Get remote HTML file.
 		$response = wp_remote_request( $route, $args );
 

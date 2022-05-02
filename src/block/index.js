@@ -24,7 +24,6 @@ cloudflareStream.icon = wp.element.createElement( 'svg', { width: 20, height: 20
 	wp.element.createElement( 'path', { d: 'M61.05,42.28H1.75A.76.76,0,0,1,1,41.52V1.73A.75.75,0,0,1,1.75,1h59.3a.75.75,0,0,1,.76.75V41.52A.76.76,0,0,1,61.05,42.28ZM2.51,40.77H60.3V2.49H2.51Z' } ),
 	wp.element.createElement( 'path', { d: 'M45.6,26.09,31.44,17.91a1.17,1.17,0,0,0-1.19-.09,1.19,1.19,0,0,0-.51,1.07V35.25a1.17,1.17,0,0,0,.51,1.06.91.91,0,0,0,.48.13,1.41,1.41,0,0,0,.71-.21L45.6,28.05a1.05,1.05,0,0,0,0-2ZM65.13,48.14H7.86a2.52,2.52,0,0,1-2.52-2.52V7.86A2.52,2.52,0,0,1,7.86,5.34H65.13a2.52,2.52,0,0,1,2.53,2.52V45.62A2.52,2.52,0,0,1,65.13,48.14Zm-56.77-3H64.63V8.36H8.36Z' } )
 );
-
 /**
  * Register: aa Gutenberg Block.
  *
@@ -42,7 +41,7 @@ registerBlockType( 'cloudflare-stream/block-video', {
 	title: __( 'Cloudflare Stream Video' ),
 	icon: cloudflareStream.icon,
 	render_callback: 'cloudflare_stream_render_block',
-	category: 'embed',
+	category: 'media',
 	keywords: [
 		__( 'Cloudflare' ),
 		__( 'Stream' ),
@@ -137,13 +136,16 @@ registerBlockType( 'cloudflare-stream/block-video', {
 				},
 				[
 					wp.element.createElement(
-						'stream',
+						'iframe',
 						{
-							src: uid,
+							src: 'https://iframe.videodelivery.net/'+uid,
+							allow: 'accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;',
+							allowfullscreen: 'true',
 							controls: controls,
 							autoplay: autoplay,
 							loop: loop,
 							muted: muted,
+							id: 'stream-player'
 						},
 					),
 					wp.element.createElement(
@@ -158,7 +160,7 @@ registerBlockType( 'cloudflare-stream/block-video', {
 							'data-cfasync': false,
 							defer: true,
 							type: 'text/javascript',
-							src: 'https://embed.videodelivery.net/embed/r4xu.fla9.latest.js?video=' + uid,
+							src: 'https://embed.videodelivery.net/embed/sdk.latest.js',
 						},
 					),
 				]

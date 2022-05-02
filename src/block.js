@@ -12,5 +12,5 @@
 import './media/models/attachments.js';
 import './media/models/query.js';
 import './media/views/media-frame.js';
-import './block/block.js';
+import './block/index.js';
 import './heap.js';

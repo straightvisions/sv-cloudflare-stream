@@ -31,7 +31,7 @@ const RemovePlugin = require('remove-files-webpack-plugin');
 module.exports = {
 	// Entry.
 	entry: {
-		block: "./blocks.js",
+		block: "./block.js",
 		editor: "./block/editor.scss",
 		style: "./block/style.scss",
 	},
@@ -43,13 +43,14 @@ module.exports = {
 
 	plugins: [
 		new MiniCssExtractPlugin({
-			filename: "../dist/[name].build.css"
+			filename: "../dist/block.[name].build.css"
 		}),
 		new RemovePlugin({
 			after: {
 				root: '../dist',
 				include: [
 					'block.build.css',
+					'block.block.build.css',
 					'editor.build.js',
 					'style.build.js',
 				],
@@ -60,8 +61,13 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /\.(js|jsx)$/, // Identifies which file or files should be transformed.
-				use: { loader: "babel-loader" }, // Babel loader to transpile modern JavaScript.
+				test: /\.m?js$/, // Identifies which file or files should be transformed.
+				use: {
+					loader: "babel-loader",
+					options: {
+						presets: ['@babel/preset-env']
+					}
+				}, // Babel loader to transpile modern JavaScript.
 				exclude: /(node_modules|bower_components)/ // JavaScript files to be ignored.
 			},
 			

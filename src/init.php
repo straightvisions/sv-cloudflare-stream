@@ -25,11 +25,11 @@ function cloudflare_stream_block_assets() {
 	wp_enqueue_style(
 		'cloudflare-stream-block-style-css',
 		// Handle.
-		plugins_url( 'dist/blocks.style.build.css', dirname( __FILE__ ) ),
+		plugins_url( 'dist/block.style.build.css', dirname( __FILE__ ) ),
 		// Block style CSS.
 		array( 'wp-block-library' ),
 		// Dependency to include the CSS after it.
-		filemtime( plugin_dir_path( __DIR__ ) . 'dist/blocks.style.build.css' )
+		filemtime( plugin_dir_path( __DIR__ ) . 'dist/block.style.build.css' )
 		// Version: filemtime — Gets file modification time.
 	);
 } // End function cloudflare_stream_block_assets().
@@ -58,11 +58,12 @@ function cloudflare_stream_block_editor_assets() {
 	wp_enqueue_script(
 		'cloudflare-stream-block-js',
 		// Handle.
-		plugins_url( '/dist/blocks.build.js', dirname( __FILE__ ) ),
+
+		plugins_url( '/dist/block.build.js', dirname( __FILE__ ) ),
 		// Block.build.js: We register the block here. Built with Webpack.
 		array( 'wp-blocks', 'wp-i18n', 'wp-element' ),
 		// Dependencies, defined above.
-		filemtime( plugin_dir_path( __DIR__ ) . 'dist/blocks.build.js' ),
+		filemtime( plugin_dir_path( __DIR__ ) . 'dist/block.build.js' ),
 		// Version: filemtime — Gets file modification time.
 		true
 		// Enqueue the script in the footer.
@@ -100,11 +101,11 @@ function cloudflare_stream_block_editor_assets() {
 	wp_enqueue_style(
 		'cloudflare-stream-block-editor-css',
 		// Handle.
-		plugins_url( 'dist/blocks.editor.build.css', dirname( __FILE__ ) ),
+		plugins_url( 'dist/block.editor.build.css', dirname( __FILE__ ) ),
 		// Block editor CSS.
 		array( 'wp-edit-blocks' ),
 		// Dependency to include the CSS after it.
-		filemtime( plugin_dir_path( __DIR__ ) . 'dist/blocks.editor.build.css' )
+		filemtime( plugin_dir_path( __DIR__ ) . 'dist/block.editor.build.css' )
 		// Version: filemtime — Gets file modification time.
 	);
 	wp_enqueue_style(
@@ -131,8 +132,9 @@ function cloudflare_stream_admin_enqueue_scripts() {
 			'render_callback' => 'cloudflare_stream_render_block',
 		)
 	);
+	//register_block_type( __DIR__ );
 }
-add_action( 'admin_enqueue_scripts', 'cloudflare_stream_admin_enqueue_scripts' );
+add_action( 'init', 'cloudflare_stream_admin_enqueue_scripts' );
 
 /**
  * Adds 'upload-php' class to the <body> tag.
@@ -286,7 +288,7 @@ function action_wp_ajax_cloudflare_stream_update() {
 		),
 	);
 	$api    = Cloudflare_Stream_API::instance();
-	$data   = $api->update_video_details( 'b9105cd434ea071e32690336969991cd', $args );
+	$data   = $api->update_video_details( $uid, $args );
 	wp_send_json_success( $data );
 }
 add_action( 'wp_ajax_cloudflare-stream-update', 'action_wp_ajax_cloudflare_stream_update' );

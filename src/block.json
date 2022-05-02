@@ -1,0 +1,8 @@
+{
+	"apiVersion": 2,
+	"name": "cloudflare-stream/block-video",
+	"title": "Cloudflare Stream",
+	"icon": "video-alt3",
+	"category": "media",
+	"editorScript": "file:../dist/block.build.js"
+}
