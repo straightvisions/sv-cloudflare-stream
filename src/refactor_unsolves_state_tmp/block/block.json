@@ -1,10 +1,9 @@
 {
+	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 2,
-	"name": "cloudflare-stream/block-video",
-	"title": "Cloudflare Stream",
-	"icon": "video-alt3",
+	"name": "core/video",
+	"title": "Video",
 	"category": "media",
-	"editorScript": "file:../dist/block.build.js",
 	"description": "Embed a video from your media library or upload a new one.",
 	"keywords": [ "movie" ],
 	"textdomain": "default",
@@ -79,6 +78,6 @@
 		"anchor": true,
 		"align": true
 	},
-	"editorStyle": "sv-block-cloudflare-stream-video-editor",
-	"style": "sv-block-cloudflare-stream"
+	"editorStyle": "wp-block-video-editor",
+	"style": "wp-block-video"
 }

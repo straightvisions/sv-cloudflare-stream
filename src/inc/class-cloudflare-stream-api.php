@@ -109,7 +109,8 @@ class Cloudflare_Stream_API {
 		} else {
 			$method = 'GET';
 		}
-
+echo "ok";
+		die;
 		$query_string = isset( $args['query'] ) ? '?' . $args['query'] : '';
 		$endpoint    .= $query_string;
 		$base_url     = 'https://api.cloudflare.com/client/v4/accounts/' . $this->api_account . '/';
@@ -120,9 +121,7 @@ class Cloudflare_Stream_API {
 			'X-Auth-Key'   => $this->api_key,
 			'Content-Type' => 'application/json',
 		);
-		echo "<pre>";
-var_dump($route);
-var_dump($args);
+
 		// Get remote HTML file.
 		$response = wp_remote_request( $route, $args );
 

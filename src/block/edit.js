@@ -21,7 +21,10 @@ const {
 const {
 	BlockControls,
 	InspectorControls,
+	MediaPlaceholder,
 	MediaUpload,
+	MediaUploadCheck,
+	MediaReplaceFlow,
 } = wp.blockEditor;
 const { Fragment, Component, createRef } = wp.element;
 

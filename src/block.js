@@ -8,9 +8,12 @@
  * All blocks should be included here since this is the file that
  * Webpack is compiling as the input file.
  */
-
+/*
 import './media/models/attachments.js';
 import './media/models/query.js';
 import './media/views/media-frame.js';
 import './block/index.js';
 import './heap.js';
+*/
+
+import './refactor/block/index.js';
