@@ -7,9 +7,7 @@
 	},
 	"author": "straightvisions GmbH",
 	"license": "GPL-2.0-or-later",
-	"dependencies": {
-	
-	},
+	"dependencies": {},
 	"devDependencies": {
 		"@babel/core": "^7.17.10",
 		"@babel/plugin-transform-react-jsx": "^7.17.3",
