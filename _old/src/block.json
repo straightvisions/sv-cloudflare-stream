@@ -1,0 +1,84 @@
+{
+	"apiVersion": 2,
+	"name": "straightvisions/sv-cloudflare-stream",
+	"title": "SV Cloudflare Stream",
+	"icon": "video-alt3",
+	"category": "media",
+	"editorScript": "file:../dist/block.build.js",
+	"description": "Embed a video from your media library or upload a new one.",
+	"keywords": [ "video", "movie", "stream" ],
+	"textdomain": "straightvisions",
+	"attributes": {
+		"autoplay": {
+			"type": "boolean",
+			"source": "attribute",
+			"selector": "video",
+			"attribute": "autoplay"
+		},
+		"caption": {
+			"type": "string",
+			"source": "html",
+			"selector": "figcaption"
+		},
+		"controls": {
+			"type": "boolean",
+			"source": "attribute",
+			"selector": "video",
+			"attribute": "controls",
+			"default": true
+		},
+		"id": {
+			"type": "number"
+		},
+		"loop": {
+			"type": "boolean",
+			"source": "attribute",
+			"selector": "video",
+			"attribute": "loop"
+		},
+		"muted": {
+			"type": "boolean",
+			"source": "attribute",
+			"selector": "video",
+			"attribute": "muted"
+		},
+		"poster": {
+			"type": "string",
+			"source": "attribute",
+			"selector": "video",
+			"attribute": "poster"
+		},
+		"preload": {
+			"type": "string",
+			"source": "attribute",
+			"selector": "video",
+			"attribute": "preload",
+			"default": "metadata"
+		},
+		"src": {
+			"type": "string",
+			"source": "attribute",
+			"selector": "video",
+			"attribute": "src"
+		},
+		"playsInline": {
+			"type": "boolean",
+			"source": "attribute",
+			"selector": "video",
+			"attribute": "playsinline"
+		},
+		"tracks": {
+			"type": "array",
+			"items": {
+				"type": "object"
+			},
+			"default": []
+		}
+	},
+	"supports": {
+		"anchor": true,
+		"align": true
+	},
+	"editorStyle": "sv-cloudflare-stream-video-editor",
+	"style": "sv-cloudflare-stream"
+}
