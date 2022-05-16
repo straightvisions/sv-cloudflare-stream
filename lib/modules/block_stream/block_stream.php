@@ -1,15 +1,15 @@
 <?php
 	namespace sv_cloudflare_stream;
-
+	
 	class block_stream extends modules {
 		public function init() {
 			
-			$this->load_settings()
-			     ->register_scripts();
+			$this->load_settings();
 			
 			add_shortcode('sv_cloudflare_stream', array($this, 'shortcode'));
 			//add_action( 'init', array($this, 'register_block' ));
 			add_action( 'init', array($this, 'register_block') );
+			add_action( 'init', array($this, 'register_scripts') );
 		}
 		
 		protected function load_settings(): block_stream {
@@ -18,13 +18,47 @@
 		
 		public function register_scripts(): block_stream {
 			
-			$this->get_script('sv-cloudflare-stream-editor-script')
-			     ->set_path('lib/backend/dist/block.build.js')
-			     ->set_type('js')
-				->set_is_gutenberg()
-			     ->set_is_backend()
-				->set_deps(array('wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor'))
-				 ->set_is_enqueued();
+			
+			
+			// cloudflare API
+			if(is_admin()){
+				$current_user = wp_get_current_user();
+				
+				require($this->get_path('lib/backend/cloudflare/class-cloudflare-stream-settings.php'));
+				require($this->get_path('lib/backend/cloudflare/class-cloudflare-stream-api.php'));
+				
+				$api_key = current_user_can( 'administrator' ) ? get_option( Cloudflare_Stream_Settings::OPTION_API_KEY ) : '';
+				$api = Cloudflare_Stream_API::instance();
+				var_dump($api_key);
+				$this->get_script('sv_cloudflare_stream_editor_script')
+				     ->set_path('lib/backend/dist/block.build.js')
+				     ->set_type('js')
+				     ->set_is_gutenberg()
+				     ->set_is_backend()
+				     ->set_deps(array('wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor'))
+				     ->set_is_enqueued()
+					 ->set_localized(array(
+						'nonce'   => wp_create_nonce( Cloudflare_Stream_Settings::NONCE ),
+						'api'     => array(
+							'email'          => get_option( Cloudflare_Stream_Settings::OPTION_API_EMAIL ),
+							'key'            => $api_key,
+							'account'        => get_option( Cloudflare_Stream_Settings::OPTION_API_ACCOUNT ),
+							'posts_per_page' => $api->api_limit,
+							'uid'            => md5( $current_user->user_login ),
+						),
+						'media'   => array(
+							'view'  => array(),
+							'model' => array(),
+						),
+						'options' => array(
+							'heap' => get_option( Cloudflare_Stream_Settings::OPTION_HEAP_ANALYTICS ),
+						),
+					));
+				
+				
+				
+			}
+			
 			
 			return $this;
 		}
