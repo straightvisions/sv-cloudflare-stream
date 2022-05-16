@@ -2,14 +2,22 @@
 	namespace sv_cloudflare_stream;
 	
 	class block_stream extends modules {
+		private $cloudflare = null;
+		
 		public function init() {
 			
 			$this->load_settings();
 			
-			add_shortcode('sv_cloudflare_stream', array($this, 'shortcode'));
-			//add_action( 'init', array($this, 'register_block' ));
 			add_action( 'init', array($this, 'register_block') );
+			
+			require($this->get_path('lib/backend/cloudflare/class-cloudflare-stream-settings.php'));
+			require($this->get_path('lib/backend/cloudflare/class-cloudflare-stream-api.php'));
+			require( $this->get_path('lib/backend/cloudflare/cloudflare.php'));
+			$this->cloudflare = new Cloudflare();
+			
 			add_action( 'init', array($this, 'register_scripts') );
+			add_shortcode('sv_cloudflare_stream', array($this, 'shortcode'));
+			
 		}
 		
 		protected function load_settings(): block_stream {
@@ -24,12 +32,9 @@
 			if(is_admin()){
 				$current_user = wp_get_current_user();
 				
-				require($this->get_path('lib/backend/cloudflare/class-cloudflare-stream-settings.php'));
-				require($this->get_path('lib/backend/cloudflare/class-cloudflare-stream-api.php'));
-				
 				$api_key = current_user_can( 'administrator' ) ? get_option( Cloudflare_Stream_Settings::OPTION_API_KEY ) : '';
 				$api = Cloudflare_Stream_API::instance();
-				var_dump($api_key);
+				
 				$this->get_script('sv_cloudflare_stream_editor_script')
 				     ->set_path('lib/backend/dist/block.build.js')
 				     ->set_type('js')
