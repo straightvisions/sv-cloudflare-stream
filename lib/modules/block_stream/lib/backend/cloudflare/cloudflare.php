@@ -1,14 +1,18 @@
 <?php
 	
 	namespace sv_cloudflare_stream;
-
+	
+	use \DateTime as DateTime;
+	
 	class Cloudflare{
 		
-		public function init(){
+		public function __construct(){
 			add_action( 'wp_ajax_query-cloudflare-stream-attachments', array($this, 'action_wp_ajax_query_cloudflare_stream_attachments') );
 		}
+	
 		
-		function action_wp_ajax_query_cloudflare_stream_attachments() {
+		public function action_wp_ajax_query_cloudflare_stream_attachments() {
+			
 			check_ajax_referer( Cloudflare_Stream_Settings::NONCE, 'nonce' );
 			$api            = Cloudflare_Stream_API::instance();
 			$args['query']  = isset( $_REQUEST['query'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['query'] ) ) : '';

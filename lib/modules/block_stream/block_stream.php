@@ -9,15 +9,20 @@
 			$this->load_settings();
 			
 			add_action( 'init', array($this, 'register_block') );
+	
 			
 			require($this->get_path('lib/backend/cloudflare/class-cloudflare-stream-settings.php'));
 			require($this->get_path('lib/backend/cloudflare/class-cloudflare-stream-api.php'));
 			require( $this->get_path('lib/backend/cloudflare/cloudflare.php'));
 			$this->cloudflare = new Cloudflare();
-			
+		
 			add_action( 'init', array($this, 'register_scripts') );
 			add_shortcode('sv_cloudflare_stream', array($this, 'shortcode'));
 			
+		}
+		
+		public function test(){
+			echo "not";die;
 		}
 		
 		protected function load_settings(): block_stream {
