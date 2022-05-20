@@ -1,6 +1,6 @@
 <?php
 /*
-Version: 1.8.00
+Version: 1.9.00
 Plugin Name: SV Cloudflare Stream
 Text Domain: sv_cloudflare_stream
 Description: Adds a Gutenberg video block to add Cloudflare streamed videos
