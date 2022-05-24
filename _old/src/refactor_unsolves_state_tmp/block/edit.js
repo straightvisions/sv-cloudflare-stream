@@ -64,7 +64,8 @@ function VideoEdit( {
 		( select ) => select( blockEditorStore ).getSettings().mediaUpload,
 		[]
 	);
-
+	
+	
 	useEffect( () => {
 		if ( ! id && isBlobURL( src ) ) {
 			const file = getBlobByURL( src );
