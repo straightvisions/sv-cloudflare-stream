@@ -21,18 +21,11 @@
 			
 		}
 		
-		public function test(){
-			echo "not";die;
-		}
-		
 		protected function load_settings(): block_stream {
 			return $this;
 		}
 		
 		public function register_scripts(): block_stream {
-			
-			
-			
 			// cloudflare API
 			if(is_admin()){
 				$current_user = wp_get_current_user();
@@ -65,7 +58,13 @@
 						),
 					));
 				
-				
+				$this->get_script('sv_cloudflare_stream_editor_hls_script')
+				     ->set_path('lib/backend/cloudflare/js/hls.min.js')
+				     ->set_type('js')
+				     ->set_is_gutenberg()
+				     ->set_is_backend()
+				     ->set_is_enqueued()
+				     ;
 				
 			}
 			
@@ -100,7 +99,7 @@
 			ob_start();
 			
 			require( $this->get_path( 'lib/frontend/tpl/block.php' ) );
-			
+			// inject script here
 			$output = ob_get_contents();
 			ob_end_clean();
 			
