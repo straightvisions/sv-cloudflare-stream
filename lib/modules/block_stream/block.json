@@ -30,8 +30,8 @@
 			"attribute": "controls",
 			"default": true
 		},
-		"id": {
-			"type": "number"
+		"uid": {
+			"type": "string"
 		},
 		"loop": {
 			"type": "boolean",
