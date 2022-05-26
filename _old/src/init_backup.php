@@ -108,6 +108,7 @@ function cloudflare_stream_block_editor_assets() {
 		filemtime( plugin_dir_path( __DIR__ ) . 'dist/block.editor.build.css' )
 		// Version: filemtime — Gets file modification time.
 	);
+	wp_enqueue_script( 'jquery-ui-progressbar' );
 	wp_enqueue_style(
 		'progressbar',
 		'https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css',

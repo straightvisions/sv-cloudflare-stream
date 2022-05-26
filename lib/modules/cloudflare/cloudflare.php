@@ -21,8 +21,14 @@
 			require($this->get_path('lib/backend/class-cloudflare-stream-api.php'));
 
 			$this->api = new Cloudflare_Stream_API($this->get_settings_list());
-			
-			add_action( 'wp_ajax_sv-query-cloudflare-stream-attachments', array($this, 'ajax_sv_query_cloudflare_stream_attachments') );
+		
+			// ajax
+			add_action( 'wp_ajax_sv-query-cloudflare-stream-attachments', array($this, 'ajax_sv_cloudflare_stream_attachments') );
+			add_action( 'wp_ajax_sv-cloudflare-stream-check-upload',  array($this,'ajax_sv_cloudflare_stream_check_upload') );
+			add_action( 'wp_ajax_sv-query-cloudflare-stream-upload',  array($this,'ajax_sv_cloudflare_stream_upload') );
+			add_action( 'wp_ajax_sv-cloudflare-stream-delete',  array($this,'ajax_sv_cloudflare_stream_delete') );
+			add_action( 'wp_ajax_sv-cloudflare-stream-update',  array($this,'ajax_sv_cloudflare_stream_update') );
+			add_action( 'wp_ajax_sv-cloudflare-stream-analytics',  array($this,'ajax_sv_cloudflare_stream_analytics') );
 		}
 		
 		protected function load_settings(): cloudflare {
@@ -59,7 +65,7 @@
 			return $this->get_name();
 		}
 		
-		public function ajax_sv_query_cloudflare_stream_attachments() {
+		public function ajax_sv_cloudflare_stream_attachments() {
 			check_ajax_referer( $this->get_nonce(), 'nonce' );
 			$api            = $this->api;
 			$args['query']  = isset( $_REQUEST['query'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['query'] ) ) : '';
@@ -126,6 +132,88 @@
 			wp_send_json( $response, 200 );
 		}
 		
+		function ajax_sv_cloudflare_stream_check_upload() {
+			check_ajax_referer( $this->get_nonce(), 'nonce' );
+			$uid  = isset( $_REQUEST['uid'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['uid'] ) ) : '';
+			$data = array();
+			
+			$api  = $this->api;
+			$data = $api->get_video_details( $uid );
+			
+			if ( isset( $data->success ) && $data->success ) {
+				wp_send_json_success( $data->result );
+			} else {
+				wp_send_json_error( $data->errors[0]->code . ' - ' . $data->errors[0]->message );
+			}
+		}
+	
 		
+		/**
+		 * AJAX method for initializing a video upload.
+		 *
+		 * @since 1.0.0
+		 */
+		function ajax_query_sv_cloudflare_stream_upload() {
+			check_ajax_referer( $this->get_nonce(), 'nonce' );
+			$api  = $this->api;
+			$data = $api->init_video();
+			wp_send_json_success( $data );
+		}
+	
+		
+		/**
+		 * AJAX method for deleting a video.
+		 *
+		 * @since 1.0.0
+		 */
+		function ajax_sv_cloudflare_stream_delete() {
+			check_ajax_referer( $this->get_nonce(), 'nonce' );
+			$uid  = isset( $_REQUEST['uid'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['uid'] ) ) : '';
+			$data = array();
+			$api  = $this->api;
+			
+			$data = $api->delete_video( $uid );
+			wp_send_json_success( $data );
+		}
+
+		
+		/**
+		 * AJAX method for updating a video.
+		 *
+		 * @since 1.0.0
+		 */
+		function ajax_sv_cloudflare_stream_update() {
+			check_ajax_referer( $this->get_nonce(), 'nonce' );
+			$uid    = isset( $_REQUEST['uid'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['uid'] ) ) : '';
+			$title  = isset( $_REQUEST['title'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['title'] ) ) : '';
+			$upload = isset( $_REQUEST['upload'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['upload'] ) ) : '';
+			$data   = array();
+			$args   = array(
+				'uid'  => $uid,
+				'meta' => array(
+					'name'   => $title,
+					'upload' => $upload,
+				),
+			);
+			$api    = $this->api;
+			$data   = $api->update_video_details( $uid, $args );
+			wp_send_json_success( $data );
+		}
+	
+		
+		/**
+		 * AJAX method for logging a HEAP analytics event.
+		 *
+		 * @since 1.0.0
+		 */
+		function ajax_sv_cloudflare_stream_analytics() {
+			check_ajax_referer( $this->get_nonce(), 'nonce' );
+			$event = isset( $_REQUEST['event'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['event'] ) ) : '';
+			$data  = array();
+			$api   = $this->api;
+			$data  = $api->log_event( $event );
+			wp_send_json_success( $data );
+		}
+
 		
 	}

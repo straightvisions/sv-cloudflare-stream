@@ -21,7 +21,7 @@
 			
 				$current_user = wp_get_current_user();
 				
-				$api_key = current_user_can( 'administrator' ) ? $this->cloudflare->get_setting('api_key') : '';
+				$api_key = current_user_can( 'administrator' ) ? $this->cloudflare->get_setting('api_key')->get_data() : '';
 				$api = $this->cloudflare->api;
 				
 				$this->get_script('sv_cloudflare_stream_editor_script')
@@ -34,9 +34,9 @@
 					 ->set_localized(array(
 						'nonce'   => wp_create_nonce( $this->cloudflare->get_nonce() ),
 						'api'     => array(
-							'email'          => $this->cloudflare->get_setting('api_email'),
+							'email'          => $this->cloudflare->get_setting('api_email')->get_data(),
 							'key'            => $api_key,
-							'account'        => $this->cloudflare->get_setting('api_account_id') ,
+							'account'        => $this->cloudflare->get_setting('api_account_id')->get_data(),
 							'posts_per_page' => $api->api_limit,
 							'uid'            => md5( $current_user->user_login ),
 						),
@@ -45,7 +45,7 @@
 							'model' => array(),
 						),
 						'options' => array(
-							'heap' => $this->cloudflare->get_setting('api_account_analytics_heap') ,
+							'heap' => $this->cloudflare->get_setting('api_account_analytics_heap')->get_data(),
 						),
 					));
 				
@@ -54,12 +54,25 @@
 				     ->set_type('js')
 				     ->set_is_gutenberg()
 				     ->set_is_backend()
-				     ->set_is_enqueued()
-				     ;
+				     ->set_is_enqueued();
+				
+				// legacy progressbar
+				wp_enqueue_script( 'jquery-ui-progressbar' );
+				$this->get_script('sv_cloudflare_stream_editor_progressbar_style')
+				     ->set_path('lib/backend/css/jquery-ui.css')
+				     ->set_is_gutenberg()
+				     ->set_is_backend()
+				     ->set_is_enqueued();
+			
 				
 			}
 			
 			
+			return $this;
+		}
+		
+		// getting fatal error without this function, check later why
+		public function load_settings(): block_stream{
 			return $this;
 		}
 		
