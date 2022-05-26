@@ -6,56 +6,23 @@
 		
 		public function init() {
 			
-			$this->set_section_title( __( 'Cloudflare API', 'sv_cloudflare_stream' ) )
-			     ->set_section_type( 'settings' )
-			     ->set_section_desc( '<a href="https://developers.cloudflare.com/api/tokens" target="_blank">'
-			                         .__('Cloudflare API Docs', 'sv_cloudflare_stream')
-			                         .'</a>' )
-			     ->load_settings()
-			     ->get_root()->add_section( $this );
-			
 			add_action( 'init', array($this, 'register_block') );
 			add_action( 'init', array($this, 'register_scripts') );
-	
 			
-			require($this->get_path('lib/backend/cloudflare/class-cloudflare-stream-settings.php'));
-			require($this->get_path('lib/backend/cloudflare/class-cloudflare-stream-api.php'));
-			require( $this->get_path('lib/backend/cloudflare/cloudflare.php'));
-			$this->cloudflare = new Cloudflare();
-		
-			add_action( 'init', array($this, 'register_scripts') );
+			$this->cloudflare = $this->get_module('cloudflare');
+			
 			add_shortcode('sv_cloudflare_stream', array($this, 'shortcode'));
 			
-		}
-		
-		protected function load_settings(): block_stream {
-			$this->get_setting( 'api_email' )
-			     ->set_title( __( 'Email', 'sv_cloudflare_stream' ) )
-			     ->load_type( 'email' );
-			
-			$this->get_setting( 'api_key' )
-			     ->set_title( __( 'Key', 'sv_cloudflare_stream' ) )
-			     ->load_type( 'password' );
-			
-			$this->get_setting( 'api_account_id' )
-			     ->set_title( __( 'Account ID', 'sv_cloudflare_stream' ) )
-			     ->load_type( 'text' );
-			
-			$this->get_setting( 'api_account_analytics_heap' )
-			     ->set_title( __( 'Activate Heap Analytics', 'sv_cloudflare_stream' ) )
-			     ->load_type( 'checkbox' );
-			
-			return $this;
 		}
 		
 		public function register_scripts(): block_stream {
 			// cloudflare API
 			if(is_admin()){
 			
-				$current_user = \wp_get_current_user();
+				$current_user = wp_get_current_user();
 				
-				$api_key = current_user_can( 'administrator' ) ? get_option( Cloudflare_Stream_Settings::OPTION_API_KEY ) : '';
-				$api = Cloudflare_Stream_API::instance();
+				$api_key = current_user_can( 'administrator' ) ? $this->cloudflare->get_setting('api_key') : '';
+				$api = $this->cloudflare->api;
 				
 				$this->get_script('sv_cloudflare_stream_editor_script')
 				     ->set_path('lib/backend/dist/block.build.js')
@@ -65,11 +32,11 @@
 				     ->set_deps(array('wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor'))
 				     ->set_is_enqueued()
 					 ->set_localized(array(
-						'nonce'   => wp_create_nonce( Cloudflare_Stream_Settings::NONCE ),
+						'nonce'   => wp_create_nonce( $this->cloudflare->get_nonce() ),
 						'api'     => array(
-							'email'          => get_option( Cloudflare_Stream_Settings::OPTION_API_EMAIL ),
+							'email'          => $this->cloudflare->get_setting('api_email'),
 							'key'            => $api_key,
-							'account'        => get_option( Cloudflare_Stream_Settings::OPTION_API_ACCOUNT ),
+							'account'        => $this->cloudflare->get_setting('api_account_id') ,
 							'posts_per_page' => $api->api_limit,
 							'uid'            => md5( $current_user->user_login ),
 						),
@@ -78,7 +45,7 @@
 							'model' => array(),
 						),
 						'options' => array(
-							'heap' => get_option( Cloudflare_Stream_Settings::OPTION_HEAP_ANALYTICS ),
+							'heap' => $this->cloudflare->get_setting('api_account_analytics_heap') ,
 						),
 					));
 				
@@ -101,8 +68,6 @@
 			
 			if ( is_string( $path ) && file_exists( $path ) ) {
 				register_block_type_from_metadata( $path );
-			}else{
-				WP_Block_Type_Registry::get_instance()->register( $path );
 			}
 			
 			return $this;
