@@ -133,6 +133,7 @@
 			} elseif ( 'headers' === $return_headers ) {
 				return wp_remote_retrieve_headers( $response );
 			}
+		
 			return wp_remote_retrieve_body( $response );
 		}
 	

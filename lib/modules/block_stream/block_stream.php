@@ -63,10 +63,7 @@
 				     ->set_is_gutenberg()
 				     ->set_is_backend()
 				     ->set_is_enqueued();
-			
-				
 			}
-			
 			
 			return $this;
 		}
@@ -80,29 +77,130 @@
 			$path = $this->get_path('block.json') ;
 			
 			if ( is_string( $path ) && file_exists( $path ) ) {
-				register_block_type_from_metadata( $path );
+				register_block_type_from_metadata( $path,
+					array('render_callback' => array($this, 'render_block'))
+					);
 			}
 			
 			return $this;
 		}
 		
 		public function shortcode($settings, $content = null){
-			$attr = $settings;
+			$attr								= shortcode_atts(
+				array(
+					'uid'			  => '',
+					'controls'        => true,
+					'preload'         => 'metadata',
+					'mute'            => true,
+					'mute'            => true,
+					'player'          => 'html5',
+				),
+				$settings,
+				$this->get_module_name()
+			); //@todo: add block attributes for mute, loop etc.
+			
+			$attr['player'] = strtolower($attr['player']);
 			
 			return $this->render_block($attr, $content);
 		}
 		
-		protected $block_attr = array();
+		private function load_frontend_scripts($attr): block_stream{
+			$this->get_script('sv_cloudflare_stream_frontend_css')
+			     ->set_path('lib/frontend/css/player.css')
+			     ->set_is_enqueued();
+			
+			// https://developers.cloudflare.com/stream/viewing-videos/using-the-player-api/
+			if($attr['player'] === 'iframe'){
+				$this->get_script('sv_cloudflare_stream_frontend_iframe_player_vendor')
+				     ->set_path('lib/frontend/js/sdk.latest.js')
+				     ->set_type('js')
+				     ->set_is_enqueued();
+				
+				$this->get_script('sv_cloudflare_stream_frontend_iframe_player')
+				     ->set_path('lib/frontend/js/player_iframe.js')
+				     ->set_type('js')
+				     ->set_deps(array('sv_cloudflare_stream_frontend_iframe_player_vendor'))
+				     ->set_is_enqueued();
+			}
+			
+			//https://developers.cloudflare.com/stream/viewing-videos/using-own-player/
+			if($attr['player'] === 'html5'){
+				$this->get_script('sv_cloudflare_stream_frontend_html5_player_vendor')
+				     ->set_path('lib/frontend/js/hls.min.js')
+				     ->set_type('js')
+				     ->set_is_enqueued();
+				
+				$this->get_script('sv_cloudflare_stream_frontend_html5_player')
+				     ->set_path('lib/frontend/js/player_html5.js')
+				     ->set_type('js')
+					//->set_deps(array('sv_cloudflare_stream_frontend_html5_player_vendor'))
+					 ->set_is_enqueued();
+			}
+			
+			return $this;
+		}
 		
 		public function render_block( array $attr, string $content ): string {
+			$api = $this->cloudflare->api;
+			
+			// fallback
+			$attr['player'] = isset($attr['player']) === true ? $attr['player'] : 'html5';
+			
+			$this->load_frontend_scripts($attr);
 			
 			ob_start();
+			if($attr['player'] === 'iframe'){
+				require( $this->get_path( 'lib/frontend/tpl/block_iframe.php' ) );
+			}
+			if($attr['player'] === 'html5'){
+				require( $this->get_path( 'lib/frontend/tpl/block_html5.php' ) );
+			}
 			
-			require( $this->get_path( 'lib/frontend/tpl/block.php' ) );
-			// inject script here
-			$output = ob_get_contents();
-			ob_end_clean();
+			$output = ob_get_clean();
 			
 			return $output;
 		}
+		
+		public function get_video_dims($video, $default_w = 1920, $default_h = 1080){
+			$output = array(
+				'width' => $default_w,
+				'height' => $default_h,
+			);
+			
+			if(
+				empty($video) === false &&
+				isset($video->result->input->width) &&
+				isset($video->result->input->height)
+			){
+				$o_width = (int)$video->result->input->width;
+				$o_height = (int)$video->result->input->height;
+				
+				// scale dims
+				if($o_width > $o_height)
+				{
+					$n_width    = $default_w;
+					$n_height   = $o_height / $o_width * $default_w;
+				}
+				
+				if($o_width < $o_height)
+				{
+					$n_height   = $default_h;
+					$n_width    = $o_width / $o_height * $default_h;
+					
+				}
+				
+				if($o_width == $o_height)
+				{
+					$n_width    = $default_w;
+					$n_height   = $default_h;
+				}
+				
+				$output['width']    = $n_width;
+				$output['height']   = $n_height;
+				
+			}
+			
+			return $output;
+		}
+		
 	}
