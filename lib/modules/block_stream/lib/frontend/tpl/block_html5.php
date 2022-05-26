@@ -15,7 +15,7 @@
 				id="stream-<?php echo $attr['uid']; ?>"
 				class="sv-cloudflare-stream-html5"
 				data-source="<?php echo $attr['uid']; ?>"
-			></video>
+			/>
 		</div>
 		
 	<?php }?>
