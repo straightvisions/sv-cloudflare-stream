@@ -69,6 +69,12 @@
 				     ->set_is_gutenberg()
 				     ->set_is_backend()
 				     ->set_is_enqueued();
+				
+				$this->get_script('sv_cloudflare_stream_backend_media_library_css')
+				     ->set_path('lib/backend/css/media_library.css')
+				     ->set_is_gutenberg()
+				     ->set_is_backend()
+				     ->set_is_enqueued();
 			}
 			
 			return $this;
