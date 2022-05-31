@@ -1,5 +1,5 @@
 <?php
-namespace sv_forms;
+namespace sv_cloudflare_stream;
 
 class freemius extends init {
 	public function init() {
