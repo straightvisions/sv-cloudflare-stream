@@ -49,13 +49,6 @@
 						),*/
 					));
 				
-				$this->get_script('sv_cloudflare_stream_editor_hls_script')
-				     ->set_path('lib/backend/cloudflare/js/hls.min.js')
-				     ->set_type('js')
-				     ->set_is_gutenberg()
-				     ->set_is_backend()
-				     ->set_is_enqueued();
-				
 				// legacy progressbar
 				wp_enqueue_script( 'jquery-ui-progressbar' );
 				$this->get_script('sv_cloudflare_stream_editor_progressbar_style')
