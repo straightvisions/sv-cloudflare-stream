@@ -44,9 +44,9 @@
 			     ->set_title( __( 'Account ID', 'sv_cloudflare_stream' ) )
 			     ->load_type( 'text' );
 			
-			$this->get_setting( 'api_account_analytics_heap' )
+			/*$this->get_setting( 'api_account_analytics_heap' )
 			     ->set_title( __( 'Activate Heap Analytics', 'sv_cloudflare_stream' ) )
-			     ->load_type( 'checkbox' );
+			     ->load_type( 'checkbox' );*/
 			
 			return $this;
 		}

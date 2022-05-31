@@ -43,10 +43,10 @@
 						'media'   => array(
 							'view'  => array(),
 							'model' => array(),
-						),
+						)/*,
 						'options' => array(
 							'heap' => $this->cloudflare->get_setting('api_account_analytics_heap')->get_data(),
-						),
+						),*/
 					));
 				
 				$this->get_script('sv_cloudflare_stream_editor_hls_script')
