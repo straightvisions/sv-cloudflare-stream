@@ -5,5 +5,6 @@
 		public function init() {
 			$this->load_module('cloudflare');
 			$this->load_module('block_stream');
+			$this->load_module('freemius');
 		}
 	}

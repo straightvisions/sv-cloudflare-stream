@@ -22,7 +22,7 @@
 			$this->set_section_title( $info['name'] )
 				->set_section_desc( $info['desc'] )
 				->set_section_type('')
-				->set_section_privacy( '<p>' . $this->get_section_title() . __(' does not collect or share any data',  'sv100_companion').'</p>' );
+				->set_section_privacy( '<p>' . $this->get_section_title() . __(' does not collect or share any data, but Cloudflare may do so - please check privacy policy of Cloudflare for further information.',  'sv100_companion').'</p>' );
 		}
 	}
 	
